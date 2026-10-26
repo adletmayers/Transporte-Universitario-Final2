@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="../img/logoTrasporte.ico">
+    <title>Admin - Gerenciamento de Usuários</title>
+
+    <!-- Bootstrap 5 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- CSS Customizado -->
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+    <!-- Navbar Injetada Dinamicamente -->
+    <div id="navbar-container"></div>
+
+    <main class="container my-4">
+        
+        <!-- Cabeçalho da Página -->
+        <div class="page-header mb-4">
+            <h2>
+                <i class="bi bi-people-fill me-2"></i>Gerenciamento de Usuários
+            </h2>
+            <p class="text-muted mb-0">Controle de acessos, permissões e cadastro de alunos e motoristas.</p>
+        </div>
+
+        <!-- Card Principal da Tabela -->
+        <div class="card p-4">
+            
+            <!-- Barra de Ações e Filtros -->
+            <div class="filters-bar border-0 p-0 bg-transparent mb-4 d-flex flex-wrap justify-content-between gap-3">
+                <div class="d-flex flex-wrap gap-2">
+                    <button class="btn btn-success">
+                        <i class="bi bi-person-plus-fill me-1"></i> Adicionar Usuário
+                    </button>
+                    <button class="btn btn-outline-secondary">
+                        <i class="bi bi-file-earmark-arrow-down me-1"></i> Exportar
+                    </button>
+                </div>
+
+                <div class="d-flex flex-wrap gap-2 align-items-center">
+                    <div class="input-container" style="width: 240px;">
+                        <input type="text" id="inputBusca" class="form-control" placeholder="Buscar usuário...">
+                    </div>
+                    <select id="filtroTipo" class="form-select" style="width: auto;">
+                        <option value="">Todos os Tipos</option>
+                        <option value="ADMIN">ADMIN</option>
+                        <option value="USUARIO">USUÁRIO</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Tabela de Usuários -->
+            <div class="table-wrapper">
+                <table class="table-resumo w-100" style="min-width: 850px;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">ID / Matrícula</th>
+                            <th style="text-align: left;">Nome Completo</th>
+                            <th style="text-align: left;">Tipo</th>
+                            <th style="text-align: left;">Curso / Setor</th>
+                            <th style="text-align: left;">E-mail</th>
+                            <th style="text-align: left;">Status</th>
+                            <th style="text-align: center;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaUsuarios">
+                        <!-- Preenchido via usuarios.js -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Rodapé da Tabela -->
+            <div class="d-flex flex-wrap justify-content-between align-items-center mt-4 pt-3 border-top border-secondary">
+                <div class="text-muted small">
+                    Total exibido na lista: <span id="totalUsuarios" class="fw-bold text-success">0</span>
+                </div>
+
+                <nav aria-label="Navegação da tabela">
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item disabled"><a class="page-link" href="#">«</a></li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">»</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="../js/tema.js"></script>
+    <script src="../js/components.js"></script>
+    <script src="../js/usuarios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

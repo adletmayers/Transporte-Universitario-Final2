@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="img/logoTrasporte.ico">
+    <title>Rotas - Transporte Universitário</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Navbar injetada dinamicamente -->
+    <div id="navbar-container"></div>
+
+    <main class="app mt-4 mb-5">
+        <div class="container-fluid px-4">
+
+            <!-- Cabeçalho Principal -->
+            <div class="page-header mb-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div>
+                    <h2 class="d-flex align-items-center gap-2 m-0 fw-bold">
+                        <i class="bi bi-signpost-split text-info"></i> Gerenciamento de Rotas
+                    </h2>
+                    <p class="description mt-1 text-muted mb-0">Consulte linhas ativas, horários de partida, capacidade máxima e taxa de lotação em tempo real.</p>
+                </div>
+                
+                <!-- Barra de Busca Rápida no Topo -->
+                <div style="min-width: 280px;">
+                    <div class="input-container w-100 position-relative">
+                        <input
+                            id="busca"
+                            type="text"
+                            class="form-control ps-4"
+                            placeholder="Pesquisar rota, ID ou horário..."
+                            onkeyup="filtrarRotas()"
+                        >
+                        <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-2 text-muted"></i>
+                        <button type="button" class="btn btn-sm btn-link text-muted position-absolute top-50 end-0 translate-middle-y me-1 text-decoration-none" onclick="limparBusca()" title="Limpar busca">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cards de Resumo Rápido -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="card p-3 h-100 shadow-sm">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="p-3 bg-info bg-opacity-10 text-info rounded-3">
+                                <i class="bi bi-bus-front fs-4"></i>
+                            </div>
+                            <div>
+                                <span class="text-muted small d-block">Total de Rotas</span>
+                                <h4 class="fw-bold mb-0" id="totalRotasCard">0</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card p-3 h-100 shadow-sm">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="p-3 bg-success bg-opacity-10 text-success rounded-3">
+                                <i class="bi bi-people fs-4"></i>
+                            </div>
+                            <div>
+                                <span class="text-muted small d-block">Capacidade Total de Assentos</span>
+                                <h4 class="fw-bold mb-0" id="totalCapacidadeCard">0</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card p-3 h-100 shadow-sm">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="p-3 bg-warning bg-opacity-10 text-warning rounded-3">
+                                <i class="bi bi-bar-chart-steps fs-4"></i>
+                            </div>
+                            <div>
+                                <span class="text-muted small d-block">Média de Ocupação</span>
+                                <h4 class="fw-bold mb-0" id="mediaOcupacaoCard">0%</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela Principal de Rotas Dinâmicas -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-0">
+                    <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0 fw-bold fs-6">
+                            <i class="bi bi-table me-2 text-info"></i>Relação de Linhas Ativas
+                        </h5>
+                        <span class="badge bg-secondary text-light">Atualizado em tempo real</span>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr class="text-muted small text-uppercase">
+                                    <th class="py-3 ps-3">ID</th>
+                                    <th class="py-3">Nome da Rota</th>
+                                    <th class="py-3">Horário</th>
+                                    <th class="py-3">Capacidade</th>
+                                    <th class="py-3 pe-3" style="width: 25%;">Lotação Atual</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabela">
+                                <!-- Preenchido dinamicamente pelo rotas.js -->
+                                <tr>
+                                    <td colspan="5" class="text-center py-4 text-muted">
+                                        <div class="spinner-border spinner-border-sm me-2 text-info" role="status"></div>
+                                        Carregando rotas do sistema...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rodapé informativo de status -->
+            <div class="d-flex justify-content-between align-items-center text-muted small px-1">
+               
+                <span>Total encontrado: <strong id="totalRotas">0</strong></span>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- BARRA DE ATALHOS RÁPIDOS (Mobile) -->
+    <nav class="quick-shortcuts">
+        <div class="shortcut-items">
+            <a href="dashboard.html" class="shortcut-item"><i class="bi bi-house-door"></i><span>Início</span></a>
+            <a href="rotas.html" class="shortcut-item active"><i class="bi bi-signpost-split"></i><span>Rotas</span></a>
+            <a href="passagens.html" class="shortcut-item"><i class="bi bi-ticket-perforated"></i><span>Passagens</span></a>
+            <a href="carteira.html" class="shortcut-item"><i class="bi bi-wallet2"></i><span>Carteira</span></a>
+            <a href="perfil.html" class="shortcut-item"><i class="bi bi-person-circle"></i><span>Perfil</span></a>
+        </div>
+    </nav>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/tema.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/rotas.js"></script>
+
+    <script>
+        function limparBusca() {
+            const input = document.getElementById('busca');
+            if (input) {
+                input.value = '';
+                filtrarRotas();
+                input.focus();
+            }
+        }
+    </script>
+</body>
+
+</html>

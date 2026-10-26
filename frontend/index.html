@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Transporte Universitário</title>
+
+    <link rel="icon" type="image/x-icon" href="img/logoTrasporte.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .login-card {
+            background-color: #12181f;
+            border: 1px solid #232e3c;
+            border-radius: 12px;
+        }
+        .modal-content {
+            background-color: #12181f;
+            border: 1px solid #232e3c;
+        }
+    </style>
+</head>
+
+<body class="bg-dark text-light">
+
+    <div class="container">
+        <div class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-11 col-sm-10 col-md-6 col-lg-4">
+
+                <!-- Card de Login -->
+                <div class="card login-card p-4 shadow-lg">
+
+                    <div class="text-center mb-3">
+                        <img src="img/logoTrasporte-NoBack.png"
+                             alt="Logo Transporte Universitário"
+                             class="img-logo"
+                             style="height: 120px; width: auto; max-width: 100%; object-fit: contain;">
+                    </div>
+
+                    <h3 class="text-center fw-bold mb-1">Transporte Universitário</h3>
+                    <p class="text-center text-secondary mb-4 small">Acesse sua conta para continuar</p>
+
+                    <!-- Identificador (E-mail ou Matrícula) -->
+                    <div class="mb-3">
+                        <label class="form-label small">E-mail ou Matrícula</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark text-secondary border-secondary"><i class="bi bi-person"></i></span>
+                            <input id="loginIdentificador" type="text" class="form-control" placeholder="Digite seu e-mail ou matrícula">
+                        </div>
+                    </div>
+
+                    <!-- Senha -->
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label class="form-label small mb-1">Senha</label>
+                            <a href="#" class="text-decoration-none small text-info" data-bs-toggle="modal" data-bs-target="#modalRecuperarSenha">Esqueceu a senha?</a>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark text-secondary border-secondary"><i class="bi bi-lock"></i></span>
+                            <input id="senha" type="password" class="form-control" placeholder="Digite sua senha">
+                            <button class="btn btn-outline-secondary" type="button" onclick="toggleSenha('senha')">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Botão Entrar -->
+                    <button id="btnLogin" class="btn btn-primary w-100 mt-3 mb-2 fw-semibold" onclick="entrar()">
+                        Entrar
+                    </button>
+
+                    <hr class="border-secondary my-3">
+
+                    <!-- Botão Pop-up Cadastro -->
+                    <button type="button" class="btn btn-outline-success w-100 fw-semibold" data-bs-toggle="modal" data-bs-target="#modalCadastro">
+                        <i class="bi bi-person-plus me-1"></i> Criar Nova Conta
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================
+         MODAL DE CADASTRO
+    ========================================= -->
+    <div class="modal fade" id="modalCadastro" tabindex="-1" aria-labelledby="modalCadastroLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content text-light">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title fw-bold" id="modalCadastroLabel"><i class="bi bi-person-plus me-2 text-success"></i>Criar Conta</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formCadastroModal" onsubmit="cadastrarUsuarioModal(event)">
+                    <div class="modal-body">
+
+                        <div class="row g-3">
+                            <!-- Dados Básicos -->
+                            <div class="col-md-6">
+                                <label class="form-label small">Nome Completo *</label>
+                                <input id="cadNome" type="text" class="form-control" placeholder="Digite seu nome" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small">E-mail *</label>
+                                <input id="cadEmail" type="email" class="form-control" placeholder="exemplo@email.com" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label small">Matrícula *</label>
+                                <input id="cadMatricula" type="text" class="form-control" placeholder="Sua matrícula acadêmica" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small">Senha *</label>
+                                <div class="input-group">
+                                    <input id="cadSenha" type="password" class="form-control" placeholder="Crie uma senha" required>
+                                    <button class="btn btn-outline-secondary" type="button" onclick="toggleSenha('cadSenha')">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Tipo de Usuário (Adicionado) -->
+                            <div class="col-md-4">
+                                <label class="form-label small">Tipo de Usuário *</label>
+                                <select id="cadTipo" class="form-select" required>
+                                    <option value="ALUNO">Aluno</option>
+                                    <option value="PROFESSOR">Professor</option>
+                                </select>
+                            </div>
+
+                            <!-- Dados Acadêmicos -->
+                            <div class="col-md-4">
+                                <label class="form-label small">Universidade</label>
+                                <input id="cadUniversidade" type="text" class="form-control" placeholder="Ex: UFPA, UEPA">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small">Curso</label>
+                                <input id="cadCurso" type="text" class="form-control" placeholder="Seu curso">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small">Turno</label>
+                                <select id="cadTurno" class="form-select">
+                                    <option value="">Selecione o turno</option>
+                                    <option value="MANHÃ">Manhã</option>
+                                    <option value="TARDE">Tarde</option>
+                                    <option value="NOITE">Noite</option>
+                                    <option value="INTEGRAL">Integral</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer border-secondary">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" id="btnSalvarCadastro" class="btn btn-success px-4">Cadastrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================
+         MODAL DE RECUPERAR SENHA
+    ========================================= -->
+    <div class="modal fade" id="modalRecuperarSenha" tabindex="-1" aria-labelledby="modalRecuperarSenhaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-light">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title fw-bold" id="modalRecuperarSenhaLabel"><i class="bi bi-key me-2 text-info"></i>Recuperar Senha</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form onsubmit="solicitarRecuperacaoSenha(event)">
+                    <div class="modal-body">
+                        <p class="small text-secondary mb-3">
+                            Informe seu e-mail cadastrado ou matrícula. Enviaremos as instruções para redefinição de senha.
+                        </p>
+                        <div class="mb-3">
+                            <label class="form-label small">E-mail ou Matrícula</label>
+                            <input id="recuperarIdentificador" type="text" class="form-control" placeholder="Digite seu e-mail ou matrícula" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-secondary">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-info text-dark fw-semibold">Enviar Instruções</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/index.js"></script>
+</body>
+
+</html>

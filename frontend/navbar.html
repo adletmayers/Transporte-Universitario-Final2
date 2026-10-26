@@ -1,0 +1,148 @@
+<nav class="navbar navbar-expand-lg border-bottom shadow-sm" id="mainNavbar">
+    <div class="container-fluid px-4">
+
+        <!-- Brand / Logo -->
+        <a class="navbar-brand d-flex align-items-center gap-2 m-0" href="dashboard.html">
+            <img src="img/logoTrasporte-NoBack.png" alt="Logo" class="nav-logo" style="height: 45px;">
+            <span class="fw-bold fs-5">Transporte Universitário</span>
+        </a>
+
+        <!-- Botão Mobile -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal" aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Conteúdo Colapsável -->
+        <div class="collapse navbar-collapse" id="menuPrincipal">
+            
+            <!-- Navegação Principal -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3 gap-lg-1">
+                <li class="nav-item">
+                    <a class="nav-link px-2" href="dashboard.html">
+                        <i class="bi bi-house-door me-1"></i>Início
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link px-2" href="rotas.html">
+                        <i class="bi bi-signpost-split me-1"></i>Rotas
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link px-2" href="passagens.html">
+                        <i class="bi bi-ticket-perforated me-1"></i>Passagens
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link px-2" href="carteira.html">
+                        <i class="bi bi-wallet2 me-1"></i>Carteira
+                    </a>
+                </li>
+
+                <!-- Menu de Administração -->
+                <li class="nav-item dropdown" id="menuAdmin" style="display:none;">
+                    <a class="nav-link dropdown-toggle px-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-shield-lock me-1"></i>Administração
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="admin/viagens.html">
+                                <i class="bi bi-bus-front me-2"></i>Viagens
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="admin/usuarios.html">
+                                <i class="bi bi-people me-2"></i>Usuários
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="admin/relatorios.html">
+                                <i class="bi bi-bar-chart-line me-2"></i>Relatórios
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <!-- Canto Direito: Notificações + Alternador de Tema + Menu da Conta -->
+            <ul class="navbar-nav align-items-lg-center gap-lg-2">
+                
+                <!-- Botão Pop-up de Avisos da Administração -->
+                <li class="nav-item position-relative">
+                    <button class="btn btn-link nav-link px-2 border-0 position-relative" id="btnAvisosNav" data-bs-toggle="modal" data-bs-target="#modalAvisosPopUp" onclick="carregarAvisosNavbar()" title="Avisos do Sistema">
+                        <i class="bi bi-bell-fill fs-5 text-warning" id="iconeAvisosNav"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none" id="badgeAvisosNaoLidos">
+                            0
+                        </span>
+                    </button>
+                </li>
+
+                <!-- Botão Troca de Tema (Sol / Lua) -->
+                <li class="nav-item">
+                    <button class="btn btn-link nav-link px-2 border-0" id="btnTrocarTema" onclick="alternarTemaNavbar()" title="Alternar Tema">
+                        <i class="bi bi-sun-fill fs-5" id="iconeTemaNav"></i>
+                    </button>
+                </li>
+
+                <!-- Dropdown de Usuário / Configurações -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle px-2 d-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <!-- Foto de perfil dinâmica -->
+                        <img id="fotoNav" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Foto" class="rounded-circle border border-1 border-secondary shadow-sm" style="width: 28px; height: 28px; object-fit: cover;">
+                        <span id="nomeUsuarioNav">Minha Conta</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" href="perfil.html">
+                                <i class="bi bi-person-badge me-2"></i>Perfil & Carteirinha
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="historico.html">
+                                <i class="bi bi-clock-history me-2"></i>Histórico
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="sobre.html">
+                                <i class="bi bi-info-circle me-2"></i>Sobre o Sistema
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item text-danger fw-semibold" href="#" onclick="sair()">
+                                <i class="bi bi-box-arrow-right me-2"></i>Sair
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<!-- Modal Pop-up de Avisos (Injetado automaticamente em todas as páginas) -->
+<div class="modal fade" id="modalAvisosPopUp" tabindex="-1" aria-labelledby="modalAvisosLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-secondary">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title fw-bold" id="modalAvisosLabel">
+                    <i class="bi bi-megaphone-fill me-2 text-warning"></i>Avisos da Administração
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="listaAvisosModal">
+                <div class="text-center py-4 text-secondary">
+                    <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                    Carregando avisos...
+                </div>
+            </div>
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>

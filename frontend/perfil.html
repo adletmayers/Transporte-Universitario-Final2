@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="img/logoTrasporte.ico">
+    <title>Perfil & Carteirinha Digital</title>
+
+    <!-- Bootstrap 5 CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- CSS Customizado -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Biblioteca para geração do QR Code -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+
+<body>
+
+    <!-- Container do Navbar Injetado -->
+    <div id="navbar-container"></div>
+
+    <main class="container my-4">
+        
+        <!-- Cabeçalho da Página -->
+        <div class="page-header mb-4">
+            <h2><i class="bi bi-person-badge-fill me-2"></i>Meu Perfil & Carteirinha</h2>
+            <p class="text-muted mb-0">Gerencie seus dados pessoais, configurações da conta e acesse sua identificação digital.</p>
+        </div>
+
+        <div class="row g-4">
+            
+            <!-- COLUNA ESQUERDA: Carteirinha Digital -->
+            <div class="col-12 col-lg-5 col-xl-4">
+                <div class="card h-100 p-4 text-center d-flex flex-column justify-content-between align-items-center">
+                    
+                    <div class="w-100">
+                        <!-- Foto do Perfil com Botão Flutuante de Alteração -->
+                        <div class="position-relative d-inline-block mb-3">
+                            <img id="fotoAluno" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="rounded-circle border border-2 border-success shadow" style="width: 110px; height: 110px; object-fit: cover;">
+                            
+                            <!-- Botão flutuante para alterar foto -->
+                            <label for="inputFotoPerfil" class="btn btn-sm btn-primary position-absolute bottom-0 end-0 rounded-circle shadow" title="Alterar foto de perfil" style="cursor: pointer; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-camera-fill"></i>
+                            </label>
+                            <input type="file" id="inputFotoPerfil" accept="image/*" class="d-none" onchange="alterarFotoPerfil(event)">
+                        </div>
+
+                        <!-- Identificação Principal -->
+                        <h4 id="nome" class="fw-bold mb-1">-</h4>
+                        <div class="mb-3">
+                            <span id="badgeTipo" class="badge bg-primary fs-6">Estudante</span>
+                        </div>
+
+                        <!-- Área do QR Code -->
+                        <div class="p-3 bg-dark rounded border border-secondary d-inline-block mb-3">
+                            <div id="qrcode" class="d-flex justify-content-center align-items-center"></div>
+                        </div>
+
+                        <!-- Dados Rápidos da Carteirinha -->
+                        <div class="text-start small text-secondary px-2 mb-3">
+                            <div class="d-flex justify-content-between py-1 border-bottom border-secondary">
+                                <span><i class="bi bi-card-heading me-1"></i> Matrícula:</span>
+                                <strong id="matricula" class="text-light">-</strong>
+                            </div>
+                            <div class="d-flex justify-content-between py-1 border-bottom border-secondary">
+                                <span><i class="bi bi-building me-1"></i> Universidade:</span>
+                                <strong id="instituicao" class="text-light">-</strong>
+                            </div>
+                            <div class="d-flex justify-content-between py-1 border-bottom border-secondary">
+                                <span><i class="bi bi-calendar-check me-1"></i> Validade:</span>
+                                <strong id="validade" class="text-light">-</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botões de Ação Rápidos -->
+                    <div class="w-100 d-grid gap-2">
+                        <button class="btn btn-outline-primary btn-sm" onclick="editarPerfil()">
+                            <i class="bi bi-pencil me-1"></i> Editar Perfil
+                        </button>
+                        <button class="btn btn-outline-warning btn-sm" onclick="alterarSenha()">
+                            <i class="bi bi-lock me-1"></i> Alterar Senha
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- COLUNA DIREITA: Detalhes da Conta, Saldo & Preferências -->
+            <div class="col-12 col-lg-7 col-xl-8 d-flex flex-column gap-4">
+                
+                <!-- Card de Saldo da Carteira -->
+                <div class="card p-4 d-flex flex-row align-items-center justify-content-between">
+                    <div>
+                        <span class="text-muted small"><i class="bi bi-wallet2 me-1"></i> Saldo Disponível</span>
+                        <h2 id="saldoDisplay" class="text-success mb-0 fw-bold">R$ 0,00</h2>
+                    </div>
+                    <a href="carteira.html" class="btn btn-success">
+                        <i class="bi bi-plus-circle me-1"></i> Recarregar
+                    </a>
+                </div>
+
+                <!-- Card de Detalhes Cadastrais -->
+                <div class="card p-4">
+                    <h5 class="mb-3 border-bottom pb-2 border-secondary">
+                        <i class="bi bi-card-checklist me-2"></i>Detalhes da Conta
+                    </h5>
+
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <p class="mb-2"><strong><i class="bi bi-person-badge me-2 text-muted"></i>ID do Usuário:</strong> <span id="infoId" class="text-light">-</span></p>
+                            <p class="mb-2"><strong><i class="bi bi-envelope me-2 text-muted"></i>E-mail:</strong> <span id="infoEmail" class="text-light">-</span></p>
+                            <p class="mb-2"><strong><i class="bi bi-card-text me-2 text-muted"></i>CPF:</strong> <span id="infoCpf" class="text-light">-</span></p>
+                            <p class="mb-2"><strong><i class="bi bi-cake2 me-2 text-muted"></i>Data de Nascimento:</strong> <span id="infoNascimento" class="text-light">-</span></p>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <p class="mb-2"><strong><i class="bi bi-journal-bookmark me-2 text-muted"></i>Curso:</strong> <span id="curso" class="text-light">-</span></p>
+                            <p class="mb-2"><strong><i class="bi bi-clock me-2 text-muted"></i>Turno:</strong> <span id="turno" class="text-light">-</span></p>
+                            <p class="mb-2"><strong><i class="bi bi-shield-check me-2 text-muted"></i>Status da Conta:</strong> <span class="text-success">Ativa</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card de Preferências e Configurações -->
+                <div class="card p-4">
+                    <h5 class="mb-3 border-bottom pb-2 border-secondary">
+                        <i class="bi bi-gear me-2"></i>Preferências de Exibição
+                    </h5>
+
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <label class="form-label text-secondary small">Tema da Interface</label>
+                            <select id="temaSelect" class="form-select" onchange="alterarTema()">
+                                <option value="dark">Escuro</option>
+                                <option value="light">Claro</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- MODAL: Editar Perfil -->
+    <div class="modal fade" id="modalPerfil" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-pencil-square me-2"></i>Editar Perfil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-2">
+                        <div class="col-12">
+                            <label class="form-label small text-secondary">Nome Completo</label>
+                            <input id="editNome" class="form-control" placeholder="Nome">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small text-secondary">E-mail</label>
+                            <input id="editEmail" class="form-control" placeholder="E-mail">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small text-secondary">CPF</label>
+                            <input id="editCpf" class="form-control" placeholder="CPF">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small text-secondary">Data de Nascimento</label>
+                            <input id="editNascimento" type="date" class="form-control">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small text-secondary">Matrícula</label>
+                            <input id="editMatricula" class="form-control" placeholder="Matrícula">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small text-secondary">Universidade</label>
+                            <input id="editUniversidade" class="form-control" placeholder="Universidade">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small text-secondary">Curso</label>
+                            <input id="editCurso" class="form-control" placeholder="Curso">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small text-secondary">Turno</label>
+                            <input id="editTurno" class="form-control" placeholder="Turno">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="form-label small text-secondary">Validade Carteirinha</label>
+                            <input id="editValidade" type="date" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-success" onclick="salvarPerfil()">
+                        <i class="bi bi-check-lg me-1"></i> Salvar Alterações
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Alterar Senha -->
+    <div class="modal fade" id="modalSenha" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-shield-lock me-2"></i>Alterar Senha</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label small text-secondary">Senha Atual</label>
+                        <input type="password" id="senhaAtual" class="form-control" placeholder="Digite sua senha atual">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small text-secondary">Nova Senha</label>
+                        <input type="password" id="novaSenha" class="form-control" placeholder="Digite a nova senha">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small text-secondary">Confirmar Nova Senha</label>
+                        <input type="password" id="confirmarSenha" class="form-control" placeholder="Confirme a nova senha">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-success" onclick="salvarSenha()">
+                        <i class="bi bi-check-lg me-1"></i> Salvar Senha
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- BARRA DE ATALHOS RÁPIDOS PARA CELULAR E TABLET -->
+    <nav class="quick-shortcuts">
+        <div class="shortcut-items">
+            <a href="dashboard.html" class="shortcut-item">
+                <i class="bi bi-house-door"></i>
+                <span>Início</span>
+            </a>
+            <a href="rotas.html" class="shortcut-item">
+                <i class="bi bi-signpost-split"></i>
+                <span>Rotas</span>
+            </a>
+            <a href="passagens.html" class="shortcut-item">
+                <i class="bi bi-ticket-perforated"></i>
+                <span>Passagens</span>
+            </a>
+            <a href="carteira.html" class="shortcut-item">
+                <i class="bi bi-wallet2"></i>
+                <span>Carteira</span>
+            </a>
+            <a href="perfil.html" class="shortcut-item">
+                <i class="bi bi-person-circle"></i>
+                <span>Perfil</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Scripts de Funcionalidade -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/tema.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/perfil.js"></script>
+</body>
+
+</html>

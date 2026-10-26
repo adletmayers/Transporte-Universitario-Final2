@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Carteira Digital - Transporte Universitário</title>
+
+    <link rel="icon" type="image/x-icon" href="img/logoTrasporte.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        .cartao-virtual {
+            background: linear-gradient(135deg, #0f382c 0%, #19523f 50%, #0d2820 100%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 1.5rem;
+            color: #ffffff;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        .cartao-virtual::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.05);
+            transform: rotate(45deg);
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="navbar-container"></div>
+
+    <main class="container py-4">
+        
+        <!-- Secção Superior: Saldo e Cartão Virtual -->
+        <div class="row g-4 mb-4">
+            
+            <!-- Saldo e Ações Rápidas -->
+            <div class="col-lg-7 d-flex flex-column justify-content-between">
+                <div>
+                    <span class="text-body-secondary small fw-semibold">Saldo Atual:</span>
+                    <h1 class="display-5 fw-bold text-success my-1" id="saldo">R$ 0,00</h1>
+                    <span class="text-body-secondary extra-small d-block mb-3">
+                        <i class="bi bi-clock-history me-1"></i>Última atualização: <span id="tempoAtualizacao">agora</span>
+                    </span>
+                </div>
+
+                <div class="d-flex gap-2 flex-wrap mt-3">
+                    <button class="btn btn-light text-dark fw-semibold px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalRecarga">
+                        <i class="bi bi-plus-circle me-1"></i> Recarregar Saldo
+                    </button>
+                    <button class="btn btn-outline-secondary fw-semibold px-4" onclick="gerarPixBoleto()">
+                        <i class="bi bi-qr-code me-1"></i> Gerar Boleto/Pix
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cartão Virtual Passe Fácil -->
+            <div class="col-lg-5">
+                <div class="cartao-virtual d-flex flex-column justify-content-between h-100" style="min-height: 190px;">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <i class="bi bi-cpu-fill fs-3 text-warning"></i>
+                        <i class="bi bi-wifi fs-4 opacity-75"></i>
+                    </div>
+
+                    <div class="my-3">
+                        <span class="text-white-50 extra-small d-block">Nº Cartão</span>
+                        <span class="fs-5 fw-monospace text-white tracking-widest" id="numCartao">1234 5678 9012 3456</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-end">
+                        <div>
+                            <span class="text-white-50 extra-small d-block">Titular</span>
+                            <strong class="text-white text-uppercase" id="titularCartao">Carregando...</strong>
+                        </div>
+                        <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">Ativo</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Transações Recentes -->
+        <div class="card border-secondary-subtle shadow-sm mb-4">
+            <div class="card-header bg-body-tertiary border-bottom border-secondary-subtle d-flex justify-content-between align-items-center py-3">
+                <h6 class="fw-bold mb-0 text-body">
+                    <i class="bi bi-arrow-down-up me-2 text-primary"></i>Transações Recentes
+                </h6>
+                <span class="text-body-secondary extra-small">Data, Rota, Tipo</span>
+            </div>
+
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <tbody id="historico">
+                            <tr>
+                                <td colspan="3" class="text-center py-4 text-body-secondary">A carregar transações...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card-footer bg-transparent border-top border-secondary-subtle text-center py-2">
+                <button class="btn btn-link btn-sm text-decoration-none text-body-secondary" onclick="carregarHistorico()">
+                    Ver Extrato Completo
+                </button>
+            </div>
+        </div>
+
+        <!-- Gerenciamento da Carteira -->
+        <div class="card border-secondary-subtle shadow-sm">
+            <div class="card-header bg-body-tertiary border-bottom border-secondary-subtle py-3">
+                <h6 class="fw-bold mb-0 text-body">
+                    <i class="bi bi-sliders me-2 text-warning"></i>Gerenciamento da Carteira
+                </h6>
+            </div>
+
+            <div class="card-body d-flex flex-column gap-3">
+                
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div>
+                        <strong class="d-block small text-body">Recarga Automática</strong>
+                        <span class="text-body-secondary extra-small">Recarregar R$ 50,00 quando o saldo for inferior a R$ 10,00</span>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="switchRecargaAuto">
+                    </div>
+                </div>
+
+                <hr class="my-0 border-secondary-subtle">
+
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div>
+                        <strong class="d-block small text-body">Notificações de Saldo</strong>
+                        <span class="text-body-secondary extra-small">Alertas diários às 09:00 ou quando o saldo estiver abaixo de R$ 20,00</span>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="switchNotificacoes" checked>
+                    </div>
+                </div>
+
+                <hr class="my-0 border-secondary-subtle">
+
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div>
+                        <strong class="d-block small text-body">Bloquear Cartão</strong>
+                        <span class="text-body-secondary extra-small">Inativa temporariamente o passe digital</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <a href="#" class="text-danger extra-small text-decoration-none" onclick="alert('Pedido registrado. Contacte o suporte para confirmar.')">
+                            <i class="bi bi-exclamation-triangle me-1"></i>Relatar Perda/Roubo
+                        </a>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="switchBloquear">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal de Recarga -->
+    <div class="modal fade" id="modalRecarga" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-secondary-subtle">
+                <div class="modal-header border-bottom border-secondary-subtle">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-wallet2 me-2 text-success"></i>Recarregar Saldo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="valorRecarga" class="form-label small text-body-secondary">Insira o valor da recarga (R$):</label>
+                    <input id="valorRecarga" type="number" class="form-control mb-3" placeholder="Ex: 50.00" step="0.01" min="1">
+                    
+                    <div class="d-flex gap-2 mb-3">
+                        <button type="button" class="btn btn-outline-secondary btn-sm flex-fill" onclick="setValorRecarga(20)">+ R$ 20</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm flex-fill" onclick="setValorRecarga(50)">+ R$ 50</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm flex-fill" onclick="setValorRecarga(100)">+ R$ 100</button>
+                    </div>
+                </div>
+                <div class="modal-footer border-top border-secondary-subtle">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success btn-sm px-4" onclick="recarregar()">Confirmar Recarga</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- BARRA DE ATALHOS RÁPIDOS PARA CELULAR E TABLET -->
+<nav class="quick-shortcuts">
+    <div class="shortcut-items">
+        <a href="dashboard.html" class="shortcut-item">
+            <i class="bi bi-house-door"></i>
+            <span>Início</span>
+        </a>
+        <a href="rotas.html" class="shortcut-item">
+            <i class="bi bi-signpost-split"></i>
+            <span>Rotas</span>
+        </a>
+        <a href="passagens.html" class="shortcut-item">
+            <i class="bi bi-ticket-perforated"></i>
+            <span>Passagens</span>
+        </a>
+        <a href="carteira.html" class="shortcut-item">
+            <i class="bi bi-wallet2"></i>
+            <span>Carteira</span>
+        </a>
+        <a href="perfil.html" class="shortcut-item">
+            <i class="bi bi-person-circle"></i>
+            <span>Perfil</span>
+        </a>
+    </div>
+</nav>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/tema.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/carteira.js"></script>
+</body>
+
+</html>
